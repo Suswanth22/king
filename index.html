@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motor-AI-Design v2 — Advanced Motor Design Engineer</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="header-brand">
+        <div class="brand-icon">⚙️</div>
+        <div class="brand-text">
+          <h1>MOTOR-AI-DESIGN</h1>
+          <p>v2.0 — Advanced Engineering Platform</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-weg">WEG ENABLED</span>
+        <span class="badge badge-marathon">MARATHON READY</span>
+        <span class="badge badge-nema">NEMA</span>
+        <span class="badge badge-iec">IEC</span>
+        <div class="status-dot"></div>
+      </div>
+    </header>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="sidebar-scroll">
+          <!-- Motor Specifications -->
+          <div class="sidebar-section">
+            <div class="section-label">⚡ MOTOR SPECS</div>
+            <div class="spec-grid">
+              <div class="spec-field">
+                <label>Power (kW)</label>
+                <input type="number" id="power" min="0.5" max="1000" value="15" />
+              </div>
+              <div class="spec-field">
+                <label>Voltage (V)</label>
+                <input type="number" id="voltage" value="460" />
+              </div>
+              <div class="spec-field">
+                <label>Frequency (Hz)</label>
+                <select id="frequency">
+                  <option value="50">50 Hz</option>
+                  <option value="60" selected>60 Hz</option>
+                </select>
+              </div>
+              <div class="spec-field">
+                <label>Poles</label>
+                <select id="poles">
+                  <option value="2">2 Poles</option>
+                  <option value="4" selected>4 Poles</option>
+                  <option value="6">6 Poles</option>
+                  <option value="8">8 Poles</option>
+                </select>
+              </div>
+              <div class="spec-field">
+                <label>Efficiency</label>
+                <input type="number" id="efficiency" min="0.7" max="0.98" step="0.01" value="0.92" />
+              </div>
+              <div class="spec-field">
+                <label>Power Factor</label>
+                <input type="number" id="powerFactor" min="0.7" max="1" step="0.05" value="0.92" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="sidebar-section">
+            <div class="section-label">📋 QUICK ACTIONS</div>
+            <div class="quick-prompts">
+              <button class="qp-btn" onclick="calculateSpecs()">
+                <span class="qp-icon">🧮</span>
+                <span>Calculate Specs</span>
+              </button>
+              <button class="qp-btn" onclick="runSimulation()">
+                <span class="qp-icon">⚡</span>
+                <span>Run Simulation</span>
+              </button>
+              <button class="qp-btn" onclick="analyzeThermal()">
+                <span class="qp-icon">🌡️</span>
+                <span>Thermal Analysis</span>
+              </button>
+              <button class="qp-btn" onclick="showDimensions()">
+                <span class="qp-icon">📐</span>
+                <span>View Dimensions</span>
+              </button>
+              <button class="qp-btn" onclick="export3D()">
+                <span class="qp-icon">🎯</span>
+                <span>3D Visualization</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Standards Reference -->
+          <div class="sidebar-section">
+            <div class="section-label">📚 STANDARDS</div>
+            <div class="standards-list">
+              <div class="std-item" onclick="loadStandard('NEMA')">
+                <span>NEMA</span>
+                <span>US/Canada</span>
+              </div>
+              <div class="std-item" onclick="loadStandard('IEC')">
+                <span>IEC</span>
+                <span>International</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main-area">
+        <!-- Tab Navigation -->
+        <div class="tab-bar">
+          <div class="tab active" onclick="switchTab(0)">DESIGN</div>
+          <div class="tab" onclick="switchTab(1)">SIMULATION</div>
+          <div class="tab" onclick="switchTab(2)">ANALYSIS</div>
+          <div class="tab" onclick="switchTab(3)">3D VIEW</div>
+          <div class="tab" onclick="switchTab(4)">EXPORT</div>
+        </div>
+
+        <!-- Tab Panels -->
+        <div class="tab-panel active" id="panel-design">
+          <div class="chat-container">
+            <div class="welcome-block">
+              <h2>Motor Design Studio</h2>
+              <p>Configure your motor specifications using the sidebar controls, then run calculations and simulations. View comprehensive performance analytics and thermal behavior.</p>
+              <div class="capability-chips">
+                <div class="chip chip-a">Spec Calculation</div>
+                <div class="chip chip-b">Load Analysis</div>
+                <div class="chip chip-c">Performance Curves</div>
+                <div class="chip chip-d">Thermal Simulation</div>
+              </div>
+            </div>
+            <div id="design-output"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-simulation">
+          <div class="chat-container">
+            <canvas id="simulationChart"></canvas>
+            <div id="simulation-output"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-analysis">
+          <div class="chat-container">
+            <canvas id="thermalChart"></canvas>
+            <div id="analysis-output"></div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-3d">
+          <div id="canvas3d" style="width: 100%; height: 100%;"></div>
+        </div>
+
+        <div class="tab-panel" id="panel-export">
+          <div class="chat-container">
+            <div class="resp-section">
+              <div class="resp-section-hdr hdr-amber">📥 EXPORT OPTIONS</div>
+              <div class="resp-section-body">
+                <button onclick="exportDesignPDF()" style="margin: 5px; padding: 8px 16px; background: #f5a623; border: none; border-radius: 4px; cursor: pointer; color: #000;">📄 Export PDF Report</button>
+                <button onclick="exportDesignJSON()" style="margin: 5px; padding: 8px 16px; background: #1e9de8; border: none; border-radius: 4px; cursor: pointer; color: #fff;">📋 Export JSON Data</button>
+                <button onclick="exportCADData()" style="margin: 5px; padding: 8px 16px; background: #2ddf7a; border: none; border-radius: 4px; cursor: pointer; color: #000;">🎯 Export CAD Data</button>
+              </div>
+            </div>
+            <div id="export-output"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
